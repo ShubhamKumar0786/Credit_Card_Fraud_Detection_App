@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fraud Prediction System</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: url('https://blog.accredian.com/wp-content/uploads/2023/09/Fraud-Detection.png') no-repeat center center/cover;
+            color: white;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            margin-top: 20px;
+            font-size: 42px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            min-height: 100vh;
+        }
+
+        .form-container, .output-container {
+            width: 45%;
+            background: rgba(0, 0, 50, 0.6);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 30px rgba(0, 0, 50, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: white;
+            margin: 15px;
+            transition: 0.3s;
+        }
+
+        .form-container:hover, .output-container:hover {
+            transform: scale(1.02);
+            background: rgba(0, 0, 80, 0.7);
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #ffd700;
+        }
+
+        .form-container input {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            transition: 0.3s;
+        }
+
+        .form-container input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .form-container input:focus {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .form-container button {
+            background: linear-gradient(to right, #ff416c, #ff4b2b);
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            width: 100%;
+            transition: 0.4s ease-in-out;
+        }
+
+        .form-container button:hover {
+            background: linear-gradient(to right, #ff4b2b, #ff416c);
+            transform: scale(1.05);
+        }
+
+        .output-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .prediction-result {
+            font-size: 22px;
+            font-weight: bold;
+            color: #ffd700;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+                padding: 20px;
+            }
+            .form-container, .output-container {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Fraud Prediction System</h1>
+
+    <div class="container">
+        <div class="form-container">
+            <h2>Enter Transaction Details</h2>
+           
+            <form id="fraudForm" action="/predict" method="post">
+                <input type="text" name="merchant_category" placeholder="Merchant Category" required><br>
+                <input type="text" name="transaction_amount" placeholder="Transaction Amount" required><br>
+                <input type="text" name="customer_job" placeholder="Customer Job" required><br>
+                <input type="text" name="transaction_month" placeholder="Transaction Month" required><br>
+                <input type="text" name="age" placeholder="Age" required><br>
+                <input type="text" name="customer_city" placeholder="Customer City" required><br>
+                <input type="text" name="customer_gender" placeholder="Customer Gender" required><br>
+                <input type="text" name="customer_state" placeholder="Customer State" required><br>
+                <input type="text" name="merchant_name" placeholder="Merchant Name" required><br>
+                <button type="submit">Predict Fraud Status</button>
+            </form>
+
+            {% if prediction %}
+            <div class="output-container">
+                <h2>Prediction Output: </h2>
+                <p class="prediction-result">{{ prediction }}</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+</body> 
+</html>
