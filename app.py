@@ -19,6 +19,7 @@ def home():
 @app.route("/predict", methods=["POST"])
 def predict():
     try:
+<<<<<<< HEAD
         # ✅ Get User Input
         merchant_category = request.form["merchant_category"]
         transaction_amount = float(request.form["transaction_amount"])
@@ -51,16 +52,73 @@ def predict():
                                       columns=['merchant_category', 'transaction_amount', 'customer_job', 'age',
                                                'customer_city', 'customer_state', 'merchant_name', 'customer_gender',
                                                'transaction_month'])
+=======
+        # ✅ Retrieve User Input Safely
+        form_data = request.form
+        required_fields = ["merchant_category", "transaction_amount", "customer_job", "age", "customer_city",
+                           "customer_state", "merchant_name", "customer_gender", "transaction_month"]
+        
+        for field in required_fields:
+            if field not in form_data:
+                return f"Error: Missing field '{field}' in form submission."
+        
+        transaction_amount = float(form_data["transaction_amount"])
+        age = int(form_data["age"])
+        transaction_month = int(form_data["transaction_month"])
+        
+        # ✅ Encoding Function with Error Handling
+        def encode_value(column_name, value):
+            if column_name in encoders:
+                if value in encoders[column_name].classes_:
+                    return int(encoders[column_name].transform([value])[0])
+                else:
+                    print(f"Warning: '{value}' not in known classes for '{column_name}'. Assigning -1.")
+                    return -1  # Default for unknown categories
+            else:
+                print(f"Error: Encoder for '{column_name}' not found. Assigning -1.")
+                return -1  # Default if encoder is missing
+        
+        # ✅ Encode Categorical Columns
+        encoded_features = {
+            "merchant_category": encode_value("merchant_category", form_data["merchant_category"]),
+            "customer_job": encode_value("customer_job", form_data["customer_job"]),
+            "customer_city": encode_value("customer_city", form_data["customer_city"]),
+            "customer_state": encode_value("customer_state", form_data["customer_state"]),
+            "merchant_name": encode_value("merchant_name", form_data["merchant_name"]),
+            "customer_gender": encode_value("customer_gender", form_data["customer_gender"])
+        }
+
+        # ✅ Prepare Input Data for Model
+        input_features = pd.DataFrame([[
+            encoded_features["merchant_category"], transaction_amount, encoded_features["customer_job"], age,
+            encoded_features["customer_city"], encoded_features["customer_state"], encoded_features["merchant_name"],
+            encoded_features["customer_gender"], transaction_month
+        ]], columns=[
+            'merchant_category', 'transaction_amount', 'customer_job', 'age',
+            'customer_city', 'customer_state', 'merchant_name', 'customer_gender', 'transaction_month'
+        ])
+>>>>>>> 2f9e2b0 (first commit)
 
         # ✅ Make Prediction
-        prediction = model.predict(input_features)
-        result = "Fraud" if prediction[0] == 1 else "Not Fraud"
+        prediction = model.predict(input_features)[0]
+        result = "Fraud" if prediction == 1 else "Not Fraud"
 
+<<<<<<< HEAD
         # ✅ Render Result in HTML
+=======
+>>>>>>> 2f9e2b0 (first commit)
         return render_template("index.html", prediction=result)
-
+    
     except Exception as e:
+<<<<<<< HEAD
         return f"Error: {str(e)}"
 
 if __name__ == "__main__":
     app.run(debug=True, threaded=True)  # ✅ Use threaded=True to fix socket issues
+=======
+        print(f"Error: {str(e)}")
+        return f"Error: {str(e)}"
+
+if __name__ == "__main__":
+    app.run(debug=True)
+>>>>>>> 2f9e2b0 (first commit)
